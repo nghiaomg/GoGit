@@ -2,6 +2,11 @@
 
 GGit là một công cụ CLI đơn giản được viết bằng Go để rút gọn các lệnh Git thường dùng.
 
+**Tác giả:** nghiaomg
+
+> **🚨 DISCLAIMER: GGit là công cụ hỗ trợ, KHÔNG THAY THẾ Git!**  
+> Bạn vẫn cần cài đặt Git và hiểu cách sử dụng Git cơ bản. GGit chỉ giúp gõ lệnh nhanh hơn.
+
 ## Mô tả
 
 GGit giúp rút gọn các lệnh Git phổ biến thành các lệnh đơn giản hơn:
@@ -37,16 +42,20 @@ ggit push "commit message"
 
 ## Cài đặt
 
+### Yêu cầu trước khi cài đặt
+- Git đã được cài đặt và cấu hình
+- Go 1.19 trở lên
+
 ### Từ source code
 ```bash
-git clone <repository-url>
-cd G-Git
-go build -o ggit main.go
+git clone https://github.com/nghiaomg/GoGit.git
+cd GoGit
+go build -o ggit.exe main.go
 ```
 
-### Sử dụng go install
+### Sử dụng go install (nếu có)
 ```bash
-go install
+go install github.com/nghiaomg/GoGit@latest
 ```
 
 ## Sử dụng
@@ -75,7 +84,7 @@ ggit status
 ggit pull
 
 # Clone repository
-ggit clone https://github.com/user/repo.git
+ggit clone https://github.com/nghiaomg/GoGit
 
 # Hiển thị trợ giúp
 ggit help
@@ -90,11 +99,14 @@ ggit version
 - Git đã được cài đặt và cấu hình
 - Repository Git đã được khởi tạo
 
-## Lưu ý
+## ⚠️ Lưu ý quan trọng
 
-- GGit chỉ là công cụ hỗ trợ viết nhanh hơn, không thay thế Git
-- Đảm bảo bạn đã cấu hình Git credentials trước khi sử dụng
-- Tool sẽ thực hiện `git add .` (thêm tất cả file thay đổi)
+- **GGit KHÔNG THAY THẾ Git**: Đây chỉ là công cụ wrapper để viết lệnh nhanh hơn
+- **Vẫn cần Git**: Bạn vẫn cần cài đặt và cấu hình Git trên máy
+- **Chỉ là shortcut**: GGit chỉ gói gọn các lệnh Git phổ biến, không có tính năng mới
+- **Git credentials**: Đảm bảo bạn đã cấu hình Git credentials (username, email, SSH keys) trước khi sử dụng
+- **Thêm tất cả file**: Tool sẽ thực hiện `git add .` (thêm tất cả file thay đổi)
+- **Kiểm tra trước khi dùng**: Luôn kiểm tra `git status` trước khi push để tránh commit nhầm file
 
 ## Giấy phép
 
