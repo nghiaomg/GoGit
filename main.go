@@ -67,12 +67,24 @@ func initCommand(cmd *cobra.Command, args []string) error {
 	}
 	fmt.Println("✅ Đã đổi tên branch thành 'main'")
 
-	// Bước 5: git remote add origin
-	fmt.Printf("🔗 Đang thêm remote origin: %s...\n", remoteURL)
-	if err := executeGitCommand("remote", "add", "origin", remoteURL); err != nil {
-		return fmt.Errorf("lỗi khi thực hiện 'git remote add origin': %v", err)
+	// Bước 5: git remote add origin (hoặc set-url nếu đã tồn tại)
+	fmt.Printf("🔗 Đang cấu hình remote origin: %s...\n", remoteURL)
+
+	// Kiểm tra xem remote origin đã tồn tại chưa
+	checkCmd := exec.Command("git", "remote", "get-url", "origin")
+	if err := checkCmd.Run(); err != nil {
+		// Remote origin chưa tồn tại, thêm mới
+		if err := executeGitCommand("remote", "add", "origin", remoteURL); err != nil {
+			return fmt.Errorf("lỗi khi thực hiện 'git remote add origin': %v", err)
+		}
+		fmt.Println("✅ Đã thêm remote origin")
+	} else {
+		// Remote origin đã tồn tại, cập nhật URL
+		if err := executeGitCommand("remote", "set-url", "origin", remoteURL); err != nil {
+			return fmt.Errorf("lỗi khi thực hiện 'git remote set-url origin': %v", err)
+		}
+		fmt.Println("✅ Đã cập nhật remote origin")
 	}
-	fmt.Println("✅ Đã thêm remote origin")
 
 	// Bước 6: git push -u origin main
 	fmt.Println("🚀 Đang push lên remote repository...")
