@@ -4,14 +4,33 @@ GGit là một công cụ CLI đơn giản được viết bằng Go để rút 
 
 ## Mô tả
 
-Thay vì phải chạy 3 lệnh Git riêng biệt:
+GGit giúp rút gọn các lệnh Git phổ biến thành các lệnh đơn giản hơn:
+
+### Khởi tạo repository
+Thay vì chạy 6 lệnh:
+```bash
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/user/repo.git
+git push -u origin main
+```
+
+Chỉ cần 1 lệnh:
+```bash
+ggit init https://github.com/user/repo.git
+```
+
+### Push thay đổi
+Thay vì chạy 3 lệnh:
 ```bash
 git add .
 git commit -m "commit message"
 git push
 ```
 
-Bạn chỉ cần chạy 1 lệnh duy nhất:
+Chỉ cần 1 lệnh:
 ```bash
 ggit push "commit message"
 ```
@@ -32,14 +51,32 @@ go install
 
 ## Sử dụng
 
-### Lệnh cơ bản
+### Khởi tạo repository mới
+```bash
+# Khởi tạo repository với commit message mặc định
+ggit init https://github.com/user/repo.git
+
+# Khởi tạo repository với commit message tùy chỉnh
+ggit init https://github.com/user/repo.git "initial project setup"
+```
+
+### Push thay đổi
 ```bash
 # Thêm tất cả file, commit và push
 ggit push "your commit message"
 ```
 
-### Các tùy chọn
+### Các lệnh khác
 ```bash
+# Hiển thị trạng thái repository
+ggit status
+
+# Pull từ remote repository
+ggit pull
+
+# Clone repository
+ggit clone https://github.com/user/repo.git
+
 # Hiển thị trợ giúp
 ggit help
 
