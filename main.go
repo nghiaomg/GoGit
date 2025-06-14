@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const version = "1.0.0"
+const version = "1.0.1"
 
 // executeGitCommand thực thi lệnh git và trả về kết quả
 func executeGitCommand(args ...string) error {
@@ -110,6 +110,9 @@ func pushCommand(cmd *cobra.Command, args []string) error {
 
 	commitMessage := strings.Join(args, " ")
 
+	// Lấy branch từ flag
+	targetBranch, _ := cmd.Flags().GetString("branch")
+
 	fmt.Println("🚀 Bắt đầu quá trình git add, commit và push...")
 
 	// Bước 1: git add .
@@ -126,12 +129,41 @@ func pushCommand(cmd *cobra.Command, args []string) error {
 	}
 	fmt.Println("✅ Đã commit thành công")
 
-	// Bước 3: git push
-	fmt.Println("🌐 Đang push lên remote repository...")
-	if err := executeGitCommand("push"); err != nil {
-		return fmt.Errorf("lỗi khi thực hiện 'git push': %v", err)
+	// Bước 3: Chuyển branch nếu cần
+	if targetBranch != "" {
+		fmt.Printf("🌿 Đang chuyển/tạo branch '%s'...\n", targetBranch)
+
+		// Kiểm tra xem branch đã tồn tại chưa
+		checkBranchCmd := exec.Command("git", "show-ref", "--verify", "--quiet", "refs/heads/"+targetBranch)
+		if err := checkBranchCmd.Run(); err != nil {
+			// Branch chưa tồn tại, tạo mới và chuyển
+			if err := executeGitCommand("checkout", "-b", targetBranch); err != nil {
+				return fmt.Errorf("lỗi khi tạo branch '%s': %v", targetBranch, err)
+			}
+			fmt.Printf("✅ Đã tạo và chuyển sang branch '%s'\n", targetBranch)
+		} else {
+			// Branch đã tồn tại, chỉ cần chuyển
+			if err := executeGitCommand("checkout", targetBranch); err != nil {
+				return fmt.Errorf("lỗi khi chuyển sang branch '%s': %v", targetBranch, err)
+			}
+			fmt.Printf("✅ Đã chuyển sang branch '%s'\n", targetBranch)
+		}
 	}
-	fmt.Println("🎉 Đã push thành công!")
+
+	// Bước 4: git push
+	if targetBranch != "" {
+		fmt.Printf("🌐 Đang push lên branch '%s'...\n", targetBranch)
+		if err := executeGitCommand("push", "-u", "origin", targetBranch); err != nil {
+			return fmt.Errorf("lỗi khi thực hiện 'git push origin %s': %v", targetBranch, err)
+		}
+		fmt.Printf("🎉 Đã push thành công lên branch '%s'!\n", targetBranch)
+	} else {
+		fmt.Println("🌐 Đang push lên remote repository...")
+		if err := executeGitCommand("push"); err != nil {
+			return fmt.Errorf("lỗi khi thực hiện 'git push': %v", err)
+		}
+		fmt.Println("🎉 Đã push thành công!")
+	}
 
 	return nil
 }
@@ -210,11 +242,18 @@ Ví dụ:
 		Long: `Lệnh push sẽ thực hiện tuần tự:
 1. git add . (thêm tất cả file thay đổi)
 2. git commit -m "commit message"
-3. git push
+3. git checkout [branch] (nếu có flag --branch)
+4. git push [origin branch]
 
-Ví dụ: ggit push "fix bug login"`,
+Ví dụ: 
+  ggit push "fix bug login"
+  ggit push "update feature" --branch dev
+  ggit push "hotfix" -b hotfix`,
 		RunE: pushCommand,
 	}
+
+	// Thêm flag --branch cho pushCmd
+	pushCmd.Flags().StringP("branch", "b", "", "Branch để push (sẽ tạo mới nếu chưa tồn tại)")
 
 	var statusCmd = &cobra.Command{
 		Use:   "status",

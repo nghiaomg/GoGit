@@ -28,16 +28,17 @@ ggit init https://github.com/user/repo.git
 ```
 
 ### Push thay đổi
-Thay vì chạy 3 lệnh:
+Thay vì chạy 3-5 lệnh:
 ```bash
 git add .
 git commit -m "commit message"
-git push
+git checkout -b feature-branch  # (nếu cần)
+git push -u origin feature-branch
 ```
 
 Chỉ cần 1 lệnh:
 ```bash
-ggit push "commit message"
+ggit push "commit message" --branch feature-branch
 ```
 
 ## Cài đặt
@@ -71,8 +72,27 @@ ggit init https://github.com/user/repo.git "initial project setup"
 
 ### Push thay đổi
 ```bash
-# Thêm tất cả file, commit và push
+# Push lên branch hiện tại
 ggit push "your commit message"
+
+# Push lên branch cụ thể (tạo mới nếu chưa có)
+ggit push "update feature" --branch dev
+ggit push "hotfix" -b hotfix/critical-bug
+```
+
+### Quản lý branch
+```bash
+# Push lên branch hiện tại
+ggit push "fix bug"
+
+# Tạo branch mới và push
+ggit push "new feature" --branch feature/user-auth
+
+# Push lên development branch
+ggit push "update docs" -b dev
+
+# Push hotfix
+ggit push "critical fix" --branch hotfix/security
 ```
 
 ### Các lệnh khác
