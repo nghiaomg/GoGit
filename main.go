@@ -278,6 +278,15 @@ Ví dụ: ggit clone https://github.com/user/repo.git`,
 		RunE: cloneCommand,
 	}
 
+	var cCmd = &cobra.Command{
+		Use:   "c [repository-url]",
+		Short: "Shorthand cho clone - Clone một repository từ remote",
+		Long: `Shorthand cho clone command. Clone một repository từ remote URL.
+
+Ví dụ: ggit c https://github.com/user/repo.git`,
+		RunE: cloneCommand,
+	}
+
 	var versionCmd = &cobra.Command{
 		Use:   "version",
 		Short: "Hiển thị phiên bản của ggit",
@@ -291,6 +300,7 @@ Ví dụ: ggit clone https://github.com/user/repo.git`,
 	rootCmd.AddCommand(statusCmd)
 	rootCmd.AddCommand(pullCmd)
 	rootCmd.AddCommand(cloneCmd)
+	rootCmd.AddCommand(cCmd)
 	rootCmd.AddCommand(versionCmd)
 
 	if err := rootCmd.Execute(); err != nil {

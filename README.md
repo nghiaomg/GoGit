@@ -103,8 +103,11 @@ ggit status
 # Pull từ remote repository
 ggit pull
 
-# Clone repository
+# Clone repository (full command)
 ggit clone https://github.com/nghiaomg/GoGit
+
+# Clone repository (shorthand)
+ggit c https://github.com/nghiaomg/GoGit
 
 # Hiển thị trợ giúp
 ggit help
